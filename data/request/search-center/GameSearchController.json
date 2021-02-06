@@ -1,8 +1,8 @@
 {
-    "functionName": {
-        "api": "/api/v1/test",
+    "searchGameByKeyword": {
+        "api": "/api/v1/search/game",
         "request_type": "get",
-        "params_method": "",
+        "params_method": "random_keyword",
         "body_params": "",
         "headers": "",
         "request_number": 100,
