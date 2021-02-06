@@ -174,12 +174,3 @@ class ApiRequestData:
             if not os.path.isfile(os.path.join(base_dir, file)):
                 dir_name_arr.append(file)
         return dir_name_arr
-
-
-if __name__ == '__main__':
-    api_dt = ApiRequestData('server-name', 'GameSearchController', 'searchGameByKeyword')
-    print(api_dt.get_json_data()[0])
-    print(api_dt.get_params(api_dt.get_json_data()[0]))
-    # print(api.file_names())
-    # for file in os.listdir('/Users/mr.dong/PycharmProjects/MultiWebPressure/data/request/server-name/'):
-    #     print(file)

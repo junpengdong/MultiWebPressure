@@ -1,5 +1,4 @@
 import requests
-# import traceback
 
 __all__ = 'ApiRequest',
 
@@ -13,7 +12,6 @@ class ApiRequest:
             return response
         except Exception as e:
             print(e)
-            # traceback.print_exc()
             return None
 
     @staticmethod
@@ -23,5 +21,4 @@ class ApiRequest:
             return response.elapsed.microseconds
         except Exception as e:
             print(e)
-            # traceback.print_exc()
             return None
