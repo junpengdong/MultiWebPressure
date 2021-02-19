@@ -21,6 +21,24 @@ class PerformanceDataPlot:
         plt.tick_params(labelsize=16)
 
     def data_plot(self, y):
+        min_t = min(y)
+        max_t = max(y)
+        if len(y) - 2 > 100:
+            base_count = int(len(y) / 100)
+            count = 0
+            total = 0
+            new_y = []
+            for d in y:
+                if d == min_t or d == max_t:
+                    new_y.append(d)
+                    continue
+                count = count + 1
+                total = total + d
+                if count == base_count:
+                    new_y.append(float("{:.3f}".format(total / count)))
+                    count = 0
+                    total = 0
+            y = new_y
         x = [i for i in range(1, len(y) + 1)]
         min_index, min_value = min(enumerate(y), key=operator.itemgetter(1))
         max_index, max_value = max(enumerate(y), key=operator.itemgetter(1))
