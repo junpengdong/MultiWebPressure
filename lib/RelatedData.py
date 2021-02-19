@@ -147,7 +147,7 @@ class ApiRequestData:
         server_dict = {}
         dir_name_arr = []
         if self.__server == 'all':
-            for dir_name in self.dir_names(self.__base_dir):
+            for dir_name in self.__dir_names(self.__base_dir):
                 dir_name_arr.append(dir_name)
         else:
             dir_name_arr.append(self.__server)
@@ -168,7 +168,7 @@ class ApiRequestData:
             return json.load(content)
 
     @staticmethod
-    def dir_names(base_dir):
+    def __dir_names(base_dir):
         dir_name_arr = []
         for file in os.listdir(base_dir):
             if not os.path.isfile(os.path.join(base_dir, file)):
