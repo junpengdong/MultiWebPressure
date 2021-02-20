@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*
+import sys
+import time
+import getopt
+sys.path.append('../')
 from core import *
 from lib import *
-import time
-import sys
-import getopt
 
 server = 'all'
 controller = 'all'
@@ -47,8 +49,11 @@ class PressureMain:
             self.__slow_start_thread(complete_time)
         else:
             self.__fast_start_thread()
-        self.__join_thread()
         exec_time = time.time() - start_time
+        print('all thread request finish.')
+        time.sleep(0.5)
+        print('collecting request data.')
+        self.__join_thread()
         # 数据打印
         data_row = self.__performance_data_print(func, request_number, exec_time)
         # 数据写入csv中

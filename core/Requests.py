@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 import requests
 # import traceback
 
@@ -12,7 +13,7 @@ class ApiRequest:
             response = requests.get(url=url, headers=headers, params=params)
             return response
         except Exception as e:
-            print(e)
+            # print(e)
             # traceback.print_exc()
             return None
 
@@ -20,8 +21,8 @@ class ApiRequest:
     def post(url='', headers=None, params=None):
         try:
             response = requests.post(url=url, headers=headers, data=params)
-            return response.elapsed.microseconds
+            return response
         except Exception as e:
-            print(e)
+            # print(e)
             # traceback.print_exc()
             return None

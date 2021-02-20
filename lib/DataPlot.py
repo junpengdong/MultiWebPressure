@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 import matplotlib.pyplot as plt
 import operator
 import os
@@ -21,6 +22,7 @@ class PerformanceDataPlot:
         plt.tick_params(labelsize=16)
 
     def data_plot(self, y):
+        print('pressure data plotting.\n\n')
         min_t = min(y)
         max_t = max(y)
         if len(y) - 2 > 100:
