@@ -31,6 +31,7 @@ if __name__ == '__main__':
     opts, args = getopt.getopt(sys.argv[1:], "t:d:i:", ['-t', '--type', '-d', '--day', '-i', '--info'])
     if sys.argv[1] in ('-i', '--info'):
         for opt, arg in opts:
+            print('in calculation...')
             print('image occupied memory: ' + get_image_info(arg, '.png') + arg)
         sys.exit(1)
     if sys.argv[1] in ('-t', '--type', '-d', '--day'):
