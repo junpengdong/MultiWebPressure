@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 import matplotlib
+# agg类型为non-gui客户端
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import operator
@@ -50,7 +51,8 @@ class PerformanceDataPlot:
         plt.annotate(str(min_value), xy=(min_index + 1, min_value))
         plt.annotate(str(max_value), xy=(max_index + 1, max_value))
         self.save_image()
-        plt.show()
+        # GUI客户端展示，非GUI客户端则注释即可
+        # plt.show()
 
     @staticmethod
     def __point_line(x, y, color='red', label=None):
