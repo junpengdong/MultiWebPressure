@@ -165,7 +165,8 @@ class ApiRequestData:
 
     @staticmethod
     def __read_data(file_path):
-        with open(file_path, 'r', encoding='utf=8') as content:
+        # with open(file_path, 'r', encoding='utf=8') as content:
+        with open(file_path, 'r') as content:
             return json.load(content)
 
     @staticmethod
