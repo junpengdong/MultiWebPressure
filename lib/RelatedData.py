@@ -106,7 +106,8 @@ class ApiRequestData:
                 file_name_path = self.__base_json_file % (k, file_name)
                 file_data_obj = self.__read_data(file_name_path)
                 if self.__function == 'all':
-                    file_data_arr.append(file_data_obj)
+                    for k2, v2 in file_data_obj.items():
+                        file_data_arr.append(v2)
                 else:
                     if self.__function.__contains__(','):
                         for f in self.__function.split(','):
