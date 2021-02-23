@@ -128,5 +128,6 @@ if __name__ == '__main__':
     api_request_data = ApiRequestData(server, controller, function)
     json_data_arr = api_request_data.get_json_data()
     for json_data in json_data_arr:
+        print('pressure api %s' % json_data['api'])
         pressure_main = PressureMain()
         pressure_main.request_thread(json_data, api_request_data)
