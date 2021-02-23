@@ -7,14 +7,5 @@
         "headers": "",
         "request_number": 100,
         "complete_second": 0
-    },
-    "findData": {
-        "api": "/api/v1/find/data",
-        "request_type": "get",
-        "params_method": "random_keyword",
-        "body_params": "",
-        "headers": "",
-        "request_number": 100,
-        "complete_second": 0
     }
 }

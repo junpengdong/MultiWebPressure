@@ -1,5 +1,5 @@
 /venv/
 .idea/*
-/data/request/*/Server.json
+#/data/request/*/Server.json
 /image/
 /data/response/

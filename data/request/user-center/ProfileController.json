@@ -1,0 +1,20 @@
+{
+    "getUserProfileByUserIdList": {
+        "api": "/api/v1/profile?userIdList=80",
+        "request_type": "get",
+        "params_method": "",
+        "body_params": "",
+        "headers": "",
+        "request_number": 1,
+        "complete_second": 0
+    },
+    "getUserProfileByUserId": {
+        "api": "/api/v1/profile/80",
+        "request_type": "get",
+        "params_method": "",
+        "body_params": "",
+        "headers": "",
+        "request_number": 1,
+        "complete_second": 0
+    }
+}
