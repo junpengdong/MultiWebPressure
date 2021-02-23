@@ -60,7 +60,7 @@ class PressureMain:
         # 数据打印
         data_row = self.__performance_data_print(f, request_number, exec_time)
         # 数据写入csv中
-        csv_file = CsvFile(server, controller, f, data_row)
+        csv_file = CsvFile(s, c, f, data_row)
         csv_file.csv_handle()
         # 数据绘图
         self.__performance_data_plot(s, c, f)
