@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*
 import copy
-from lib import WebResponseData
-from prettytable import PrettyTable
 
-__all__ = 'PerformanceDataPrint', 'DataAnalysisPrint',
+__all__ = 'PerformanceDataPrint',
 
 
 class PerformanceDataPrint:
@@ -86,51 +84,3 @@ class PerformanceDataPrint:
                 s = s + " "
         s = s + "|"
         print(s)
-
-
-class DataAnalysisPrint:
-
-    def __init__(self):
-        self.__key_arr = ['max_resp_time', 'min_resp_time', 'avg_resp_time',
-                          'max_tps', 'min_tps', 'avg_tps', 'slow_query', 'error_query']
-
-    def data_handle(self, key):
-        json_data = WebResponseData.read_data()
-        json_obj_arr = json_data.get(key)
-        handle_arr = []
-        for k in self.__key_arr:
-            handle_arr.append(DataAnalysisPrint.__data_compare(k, json_obj_arr))
-        self.__data_print(handle_arr)
-
-    @staticmethod
-    def __data_compare(key, json_obj_arr):
-        value_arr = [d[key] for d in json_obj_arr]
-        if len(value_arr) == 0:
-            return
-        newest_data = value_arr[-1]
-        value_arr = value_arr[:len(value_arr) - 1]
-        compare_arr = [key]
-        for value in value_arr:
-            if isinstance(value, int):
-                v = int(newest_data) - int(value)
-                if v > 0:
-                    result = "+%s" % v
-                else:
-                    result = "%s" % v
-            else:
-                v = float(newest_data) - float(value)
-                if v > 0:
-                    result = "+{:.3f}".format(v)
-                else:
-                    result = "{:.3f}".format(v)
-            compare_arr.append("%s(%s)" % (value, result))
-        compare_arr.append(newest_data)
-        return compare_arr
-
-    @staticmethod
-    def __data_print(handle_arr):
-        tb = PrettyTable()
-        tb.field_names = ['key_type', 'index[4]', 'index[3]', 'index[2]', 'index[1]', 'index[0]']
-        for data_arr in handle_arr:
-            tb.add_row(data_arr)
-        print(tb)
