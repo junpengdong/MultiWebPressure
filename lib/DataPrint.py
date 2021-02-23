@@ -9,7 +9,7 @@ class PerformanceDataPrint:
     def __init__(self, function, req_number, exec_time, resp_time_arr, resp_error_arr, sent_arr, receive_arr):
         self.__function = function
         self.__req_number = req_number
-        self.__exec_time = "{:.3f}".format(exec_time)
+        self.__exec_time = "{:.6f}".format(exec_time)
         self.__sec_number = req_number / exec_time
         self.__max_resp_time = "{:.3f}".format(max(resp_time_arr))
         self.__min_resp_time = "{:.3f}".format(min(resp_time_arr))
@@ -57,7 +57,7 @@ class PerformanceDataPrint:
         print("-----------------------------------------------------------------------------")
         self.__append_str("|        Execute Time                |        %s s" % self.__exec_time)
         self.__append_str("|        Request Times               |        %s" % self.__req_number)
-        self.__append_str("|        Request Times/Sec           |        %s" % self.__sec_number)
+        self.__append_str("|        Request Times/Sec           |        %s" % "{:.3f}".format(self.__sec_number))
         self.__append_str("|        Max Response Time           |        %s ms" % self.__max_resp_time)
         self.__append_str("|        Min Response Time           |        %s ms" % self.__min_resp_time)
         self.__append_str("|        Avg Response Time           |        %s ms" % self.__avg_resp_time)

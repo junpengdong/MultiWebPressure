@@ -25,7 +25,10 @@ class PressureMain:
         self.receive_arr = []
 
     def request_thread(self, data, obj):
-        func = obj.get_function(data)
+        s = obj.get_server(data)
+        c = obj.get_controller(data)
+        f = obj.get_function(data)
+
         api = obj.get_api(data)
         request_number = obj.get_request_number(data)
         request_type = obj.get_request_type(data)
@@ -55,12 +58,12 @@ class PressureMain:
         print('collecting request data.')
         self.__join_thread()
         # 数据打印
-        data_row = self.__performance_data_print(func, request_number, exec_time)
+        data_row = self.__performance_data_print(f, request_number, exec_time)
         # 数据写入csv中
-        csv_file = CsvFile(server, controller, func, data_row)
+        csv_file = CsvFile(server, controller, f, data_row)
         csv_file.csv_handle()
         # 数据绘图
-        self.__performance_data_plot(func)
+        self.__performance_data_plot(s, c, f)
 
     def __fast_start_thread(self):
         try:
@@ -101,8 +104,8 @@ class PressureMain:
         data_print.analysis_print()
         return data_print.get_data_row()
 
-    def __performance_data_plot(self, f):
-        data_plot = PerformanceDataPlot(server, controller, f)
+    def __performance_data_plot(self, s, c, f):
+        data_plot = PerformanceDataPlot(s, c, f)
         data_plot.data_plot(self.resp_time_arr)
 
 

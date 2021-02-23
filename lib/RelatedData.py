@@ -22,6 +22,8 @@ class ApiRequestData:
         self.__headers_key = 'headers'
         self.__request_number_key = 'request_number'
         self.__complete_second_key = 'complete_second'
+        self.__server_key = 'server'
+        self.__controller_key = 'controller'
         self.__function_key = 'function'
         self.__base_dir = '../data/request/'
         self.__base_json_dir = '../data/request/%s/'
@@ -54,6 +56,12 @@ class ApiRequestData:
     def get_complete_second(self, json_data):
         complete_second = json_data.get(self.__complete_second_key)
         return complete_second
+
+    def get_server(self, json_data):
+        return json_data.get(self.__server_key)
+
+    def get_controller(self, json_data):
+        return json_data.get(self.__controller_key)
 
     def get_function(self, json_data):
         return json_data.get(self.__function_key)
@@ -107,17 +115,24 @@ class ApiRequestData:
                 file_data_obj = self.__read_data(file_name_path)
                 if self.__function == 'all':
                     for k2, v2 in file_data_obj.items():
+                        v2[self.__server_key] = k
+                        v2[self.__controller_key] = file_name.split('.')[0]
+                        v2[self.__function_key] = k2
                         file_data_arr.append(v2)
                 else:
                     if self.__function.__contains__(','):
                         for f in self.__function.split(','):
                             file_data = file_data_obj.get(f)
                             if file_data is not None:
+                                file_data[self.__server_key] = k
+                                file_data[self.__controller_key] = file_name.split('.')[0]
                                 file_data[self.__function_key] = f
                                 file_data_arr.append(file_data)
                     else:
                         file_data = file_data_obj.get(self.__function)
                         if file_data is not None:
+                            file_data[self.__server_key] = k
+                            file_data[self.__controller_key] = file_name.split('.')[0]
                             file_data[self.__function_key] = self.__function
                             file_data_arr.append(file_data)
             step1_data[host] = file_data_arr
