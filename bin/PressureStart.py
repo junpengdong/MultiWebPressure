@@ -50,7 +50,7 @@ class PressureMain:
                 print('error request_type')
                 sys.exit(1)
         # print('request thread init finish...')
-        time.sleep(1)
+        # time.sleep(1)
         # print('request thread start...')
         start_time = time.time()
         if complete_time > 0:
