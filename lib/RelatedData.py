@@ -22,7 +22,6 @@ class ApiRequestData:
         self.__headers_key = 'headers'
         self.__request_number_key = 'request_number'
         self.__complete_second_key = 'complete_second'
-        self.__server_key = 'server'
         self.__controller_key = 'controller'
         self.__function_key = 'function'
         self.__base_dir = '../data/request/'
@@ -57,9 +56,6 @@ class ApiRequestData:
         complete_second = json_data.get(self.__complete_second_key)
         return complete_second
 
-    def get_server(self, json_data):
-        return json_data.get(self.__server_key)
-
     def get_controller(self, json_data):
         return json_data.get(self.__controller_key)
 
@@ -86,55 +82,47 @@ class ApiRequestData:
         }
 
     def __filter_params(self):
-        if self.__server == 'all':
-            self.__controller = 'all'
+        if self.__controller == 'all':
             self.__function = 'all'
-        else:
-            if self.__controller == 'all':
-                self.__function = 'all'
 
     def get_json_data(self):
         return self.__json_data_arr
 
     def __init_data(self):
-        server_dict = self.__file_names()
-        data = self.__filter_controller(server_dict)
+        file_name_arr = self.__file_names()
+        data = self.__filter_controller(file_name_arr)
         step1_data = self.__data_handle_step1(data)
         step2_data = self.__data_handle_step2(step1_data)
         return step2_data
 
     def __data_handle_step1(self, data):
         step1_data = {}
-        for k, v in data.items():
-            host_json_path = self.__base_json_file % (k, self.__host_json)
+        for file in data:
+            host_json_path = self.__base_json_file % (self.__server, self.__host_json)
             host_json_obj = self.__read_data(host_json_path)
             host = host_json_obj.get(self.__host_key)
             file_data_arr = []
-            for file_name in v:
-                file_name_path = self.__base_json_file % (k, file_name)
-                file_data_obj = self.__read_data(file_name_path)
-                if self.__function == 'all':
-                    for k2, v2 in file_data_obj.items():
-                        v2[self.__server_key] = k
-                        v2[self.__controller_key] = file_name.split('.')[0]
-                        v2[self.__function_key] = k2
-                        file_data_arr.append(v2)
-                else:
-                    if self.__function.__contains__(','):
-                        for f in self.__function.split(','):
-                            file_data = file_data_obj.get(f)
-                            if file_data is not None:
-                                file_data[self.__server_key] = k
-                                file_data[self.__controller_key] = file_name.split('.')[0]
-                                file_data[self.__function_key] = f
-                                file_data_arr.append(file_data)
-                    else:
-                        file_data = file_data_obj.get(self.__function)
+            file_name_path = self.__base_json_file % (self.__server, file)
+            file_data_obj = self.__read_data(file_name_path)
+            if self.__function == 'all':
+                for k2, v2 in file_data_obj.items():
+                    v2[self.__controller_key] = file.split('.')[0]
+                    v2[self.__function_key] = k2
+                    file_data_arr.append(v2)
+            else:
+                if self.__function.__contains__(','):
+                    for f in self.__function.split(','):
+                        file_data = file_data_obj.get(f)
                         if file_data is not None:
-                            file_data[self.__server_key] = k
-                            file_data[self.__controller_key] = file_name.split('.')[0]
-                            file_data[self.__function_key] = self.__function
+                            file_data[self.__controller_key] = f.split('.')[0]
+                            file_data[self.__function_key] = f
                             file_data_arr.append(file_data)
+                else:
+                    file_data = file_data_obj.get(self.__function)
+                    if file_data is not None:
+                        file_data[self.__controller_key] = file.split('.')[0]
+                        file_data[self.__function_key] = self.__function
+                        file_data_arr.append(file_data)
             step1_data[host] = file_data_arr
         return step1_data
 
@@ -147,37 +135,22 @@ class ApiRequestData:
         return api_data_arr
 
     def __filter_controller(self, data):
-        if self.__server == 'all':
+        if self.__controller == 'all':
             return data
         else:
-            if self.__controller == 'all':
-                return data
-            else:
-                file_name_arr = data.get(self.__server)
-                for file_name in file_name_arr:
-                    if not file_name.__contains__(self.__controller):
-                        file_name_arr.remove(file_name)
-                data[self.__server] = file_name_arr
-                return data
+            for file_name in data:
+                if not file_name.__contains__(self.__controller):
+                    data.remove(file_name)
+            return data
 
     def __file_names(self):
-        server_dict = {}
-        dir_name_arr = []
-        if self.__server == 'all':
-            for dir_name in self.__dir_names(self.__base_dir):
-                dir_name_arr.append(dir_name)
-        else:
-            dir_name_arr.append(self.__server)
-
-        for dir_name in dir_name_arr:
-            file_name_arr = []
-            dir_path = os.path.abspath(self.__base_json_dir % dir_name)
-            for file_name in os.listdir(dir_path):
-                if file_name == self.__host_json:
-                    continue
-                file_name_arr.append(file_name)
-            server_dict[dir_name] = file_name_arr
-        return server_dict
+        file_name_arr = []
+        dir_path = os.path.abspath(self.__base_json_dir % self.__server)
+        for file_name in os.listdir(dir_path):
+            if file_name == self.__host_json:
+                continue
+            file_name_arr.append(file_name)
+        return file_name_arr
 
     @staticmethod
     def __read_data(file_path):

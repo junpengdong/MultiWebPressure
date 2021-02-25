@@ -6,7 +6,7 @@ sys.path.append('../')
 from core import *
 from lib import *
 
-server = 'all'
+server = ''
 controller = 'all'
 function = 'all'
 
@@ -24,8 +24,13 @@ class PressureMain:
         # 接收数据字节数组
         self.receive_arr = []
 
+    @staticmethod
+    def do_function(d, req):
+        print('pressure api %s\n' % d['api'])
+        pressure_main = PressureMain()
+        return pressure_main.request_thread(d, req)
+
     def request_thread(self, data, obj):
-        s = obj.get_server(data)
         c = obj.get_controller(data)
         f = obj.get_function(data)
 
@@ -44,26 +49,27 @@ class PressureMain:
             else:
                 print('error request_type')
                 sys.exit(1)
-        print('request thread init finish...')
+        # print('request thread init finish...')
         time.sleep(1)
-        print('request thread start...')
+        # print('request thread start...')
         start_time = time.time()
         if complete_time > 0:
             self.__slow_start_thread(complete_time)
         else:
             self.__fast_start_thread()
         exec_time = time.time() - start_time
-        print('all thread request finish.')
-        time.sleep(0.5)
-        print('collecting request data.')
+        print('all thread request finish.\n')
         self.__join_thread()
         # 数据打印
         data_row = self.__performance_data_print(f, request_number, exec_time)
         # 数据写入csv中
-        csv_file = CsvFile(s, c, f, data_row)
+        csv_file = CsvFile(server, c, f, data_row)
         csv_file.csv_handle()
-        # 数据绘图
-        self.__performance_data_plot(s, c, f)
+        return {
+            'controller': c,
+            'function': f,
+            'data': self.resp_time_arr
+        }
 
     def __fast_start_thread(self):
         try:
@@ -104,19 +110,18 @@ class PressureMain:
         data_print.analysis_print()
         return data_print.get_data_row()
 
-    def __performance_data_plot(self, s, c, f):
-        data_plot = PerformanceDataPlot(s, c, f)
-        data_plot.data_plot(self.resp_time_arr)
+    def __performance_data_plot(self, c, f, plot_obj):
+        plot_obj.data_plot(c, f, self.resp_time_arr)
 
 
 if __name__ == '__main__':
     opts, args = getopt.getopt(sys.argv[1:], "(hH)s:c:f:", ['help=', 'server=', 'controller=', 'function='])
     if len(opts) == 0:
-        print('Usage python PressureStart.py -s server-name -c controller-name -f getAssociationalWord')
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
         sys.exit(1)
 
     if sys.argv[1] in ('-h', '-H', '--help'):
-        print('Usage python PressureStart.py -s server-name -c controller-name -f getAssociationalWord')
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
         sys.exit(1)
 
     if sys.argv[1] in ('-s', '--server', '-c', '--controller', '-f', '--function'):
@@ -128,9 +133,30 @@ if __name__ == '__main__':
             if opt in ('-f', '--function'):
                 function = arg
 
+    if server == '':
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
+        sys.exit(1)
+
     api_request_data = ApiRequestData(server, controller, function)
     json_data_arr = api_request_data.get_json_data()
+
+    thread_arr = []
     for json_data in json_data_arr:
-        print('pressure api %s' % json_data['api'])
-        pressure_main = PressureMain()
-        pressure_main.request_thread(json_data, api_request_data)
+        thread_arr.append(CustomThreadPool(PressureMain.do_function, args=(json_data, api_request_data)))
+
+    for t in thread_arr:
+        t.start()
+
+    r_arr = []
+    for t in thread_arr:
+        if t.is_alive():
+            t.join()
+            r = t.get_result()
+        else:
+            r = t.get_result()
+        r_arr.append(r)
+
+    # 数据绘图
+    data_plot = PerformanceDataPlot(server)
+    for r in r_arr:
+        data_plot.data_plot(r.get('controller'), r.get('function'), r.get('data'))

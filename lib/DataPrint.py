@@ -50,43 +50,52 @@ class PerformanceDataPrint:
 
     # 同步打印性能分析数据
     def analysis_print(self):
-        print("-----------------------------------------------------------------------------")
-        print("|                                                                           |")
-        self.__append_title_str('%s Pressure Data' % self.__function)
-        print("|                                                                           |")
-        print("-----------------------------------------------------------------------------")
-        self.__append_str("|        Execute Time                |              %s s" % self.__exec_time)
-        self.__append_str("|        Request Times               |              %s" % self.__req_number)
-        self.__append_str("|        Request Times/Sec           |              %s" % "{:.3f}".format(self.__sec_number))
-        self.__append_str("|        Max Response Time           |              %s ms" % self.__max_resp_time)
-        self.__append_str("|        Min Response Time           |              %s ms" % self.__min_resp_time)
-        self.__append_str("|        Avg Response Time           |              %s ms" % self.__avg_resp_time)
-        self.__append_str("|        Max TPS                     |              %s" % self.__max_tps)
-        self.__append_str("|        Min TPS                     |              %s" % self.__min_tps)
-        self.__append_str("|        Avg TPS                     |              %s" % self.__avg_tps)
-        self.__append_str("|        50% Line                    |              " + str(self.__resp_time_50) + " ms")
-        self.__append_str("|        90% Line                    |              " + str(self.__resp_time_90) + " ms")
-        self.__append_str("|        95% Line                    |              " + str(self.__resp_time_95) + " ms")
-        self.__append_str("|        99% Line                    |              " + str(self.__resp_time_99) + " ms")
-        self.__append_str("|        Sent KB/Sec                 |              %s KB" % self.__sent_kb)
-        self.__append_str("|        Received KB/Sec             |              %s KB" % self.__receive_kb)
-        self.__append_str("|        Slow Request Times          |              %s" % self.__slow_query)
-        self.__append_str("|        Slow Request Rate           |              " + self.__slow_query_rate + "%")
-        self.__append_str("|        Error Request Times         |              %s" % self.__error_query)
-        self.__append_str("|        Error Request Rate          |              " + self.__error_query_rate + "%")
-        print("-----------------------------------------------------------------------------\n\n")
+        s = '-----------------------------------------------------------------------------\n'
+        s = s + '|                                                                           |\n' \
+            + self.__append_title_str('%s Pressure Data' % self.__function) \
+            + '|                                                                           |\n' \
+            + '-----------------------------------------------------------------------------\n' \
+            + self.__append_str("|        Execute Time                |              %s s" % self.__exec_time) \
+            + self.__append_str("|        Request Times               |              %s" % self.__req_number) \
+            + self.__append_str("|        Request Times/Sec           |              %s" % "{:.3f}"
+                                .format(self.__sec_number)) \
+            + self.__append_str("|        Max Response Time           |              %s ms" % self.__max_resp_time) \
+            + self.__append_str("|        Min Response Time           |              %s ms" % self.__min_resp_time) \
+            + self.__append_str("|        Avg Response Time           |              %s ms" % self.__avg_resp_time) \
+            + self.__append_str("|        Max TPS                     |              %s" % self.__max_tps) \
+            + self.__append_str("|        Min TPS                     |              %s" % self.__min_tps) \
+            + self.__append_str("|        Avg TPS                     |              %s" % self.__avg_tps) \
+            + self.__append_str("|        50% Line                    |              "
+                                + str(self.__resp_time_50) + " ms") \
+            + self.__append_str("|        90% Line                    |              "
+                                + str(self.__resp_time_90) + " ms") \
+            + self.__append_str("|        95% Line                    |              "
+                                + str(self.__resp_time_95) + " ms") \
+            + self.__append_str("|        99% Line                    |              "
+                                + str(self.__resp_time_99) + " ms") \
+            + self.__append_str("|        Sent KB/Sec                 |              %s KB" % self.__sent_kb) \
+            + self.__append_str("|        Received KB/Sec             |              %s KB" % self.__receive_kb) \
+            + self.__append_str("|        Slow Request Times          |              %s" % self.__slow_query) \
+            + self.__append_str("|        Slow Request Rate           |              " + self.__slow_query_rate + "%") \
+            + self.__append_str("|        Error Request Times         |              %s" % self.__error_query) \
+            + self.__append_str("|        Error Request Rate          |              "
+                                + self.__error_query_rate + "%") \
+            + '-----------------------------------------------------------------------------\n\n'
+        print(s)
 
     @staticmethod
     def __append_title_str(s, c=77):
         length = len(s)
         r_length = c - length
-        for i in range(int(r_length / 2) - 1):
+        for i in range(int(r_length / 2)):
             s = " " + s
         s = "|" + s
-        for i in range(int(r_length / 2)):
+        length = len(s)
+        r_length = c - length
+        for i in range(int(r_length) - 1):
             s = s + " "
-        s = s + "|"
-        print(s)
+        s = s + "|\n"
+        return s
 
     @staticmethod
     def __append_str(s, c=77):
@@ -94,5 +103,5 @@ class PerformanceDataPrint:
         if length < c:
             for i in range(c - length - 1):
                 s = s + " "
-        s = s + "|"
-        print(s)
+        s = s + "|\n"
+        return s

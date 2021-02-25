@@ -3,29 +3,29 @@ import matplotlib
 # agg类型为non-gui客户端
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
+plt.figure(figsize=(16, 8))
+plt.title('WebPressure Data', fontsize=20)
+plt.ylabel('Response Time(ms)', fontsize=18)
+plt.xlabel('Request Times', fontsize=18)
+plt.tick_params(labelsize=16)
 import operator
 import os
 import json
+
 
 __all__ = 'PerformanceDataPlot',
 
 
 class PerformanceDataPlot:
 
-    def __init__(self, s, c, f):
-        self.__function = f
+    def __init__(self, s):
         self.__sequence_key = 'sequence'
         self.__sequence_json = 'sequence.json'
         self.__plot_name = '%s_%s.png'
-        self.__base_dir = '../image/%s/%s/%s/' % (s, c, f)
-        plt.figure(figsize=(16, 8))
-        plt.title('%s WebPressure Data' % f, fontsize=20)
-        plt.ylabel('Response Time(ms)', fontsize=18)
-        plt.xlabel('Request Times', fontsize=18)
-        plt.tick_params(labelsize=16)
+        self.__base_dir = '../image/%s/' % s
 
-    def data_plot(self, y):
-        print('pressure data plotting.\n\n')
+    def data_plot(self, c, f, y):
+        image_dir = self.__base_dir + c + '/' + f + '/'
         min_t = min(y)
         max_t = max(y)
         if len(y) - 2 > 100:
@@ -50,7 +50,7 @@ class PerformanceDataPlot:
         self.__point_line(x, y)
         plt.annotate(str(min_value), xy=(min_index + 1, min_value))
         plt.annotate(str(max_value), xy=(max_index + 1, max_value))
-        self.save_image()
+        self.save_image(f, image_dir)
         # GUI客户端展示，非GUI客户端则注释即可
         # plt.show()
 
@@ -62,15 +62,15 @@ class PerformanceDataPlot:
     def __line(x, y, color='red', line_width=2, line_style='--'):
         plt.plot(x, y, color=color, linewidth=line_width, linestyle=line_style)
 
-    def save_image(self):
+    def save_image(self, f, image_dir):
         sequence = 1
-        if not os.path.exists(self.__base_dir):
-            os.makedirs(self.__base_dir)
-            with open(self.__base_dir + self.__sequence_json, 'w') as json_file:
+        if not os.path.exists(image_dir):
+            os.makedirs(image_dir)
+            with open(image_dir + self.__sequence_json, 'w') as json_file:
                 json.dump({self.__sequence_key: sequence}, json_file, indent=4)
         else:
-            with open(self.__base_dir + self.__sequence_json, 'r') as json_str:
+            with open(image_dir + self.__sequence_json, 'r') as json_str:
                 sequence = json.load(json_str).get(self.__sequence_key) + 1
-            with open(self.__base_dir + self.__sequence_json, 'w') as json_file:
+            with open(image_dir + self.__sequence_json, 'w') as json_file:
                 json.dump({self.__sequence_key: sequence}, json_file, indent=4)
-        plt.savefig(self.__base_dir + (self.__plot_name % (self.__function, sequence)))
+        plt.savefig(image_dir + (self.__plot_name % (f, sequence)))

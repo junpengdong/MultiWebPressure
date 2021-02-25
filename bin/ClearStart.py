@@ -29,6 +29,11 @@ def get_image_info(c, end_point=None):
 
 if __name__ == '__main__':
     opts, args = getopt.getopt(sys.argv[1:], "t:d:i:", ['-t', '--type', '-d', '--day', '-i', '--info'])
+    if len(sys.argv) == 1:
+        clear_image = ClearImage()
+        clear_image.do_clear(c_type, day)
+        sys.exit(1)
+
     if sys.argv[1] in ('-i', '--info'):
         for opt, arg in opts:
             print('in calculation...')
