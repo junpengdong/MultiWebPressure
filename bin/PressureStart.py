@@ -9,6 +9,8 @@ from lib import *
 server = ''
 controller = 'all'
 function = 'all'
+dynamic = None
+host = None
 
 
 class PressureMain:
@@ -115,16 +117,16 @@ class PressureMain:
 
 
 if __name__ == '__main__':
-    opts, args = getopt.getopt(sys.argv[1:], "(hH)s:c:f:", ['help=', 'server=', 'controller=', 'function='])
+    opts, args = getopt.getopt(sys.argv[1:], "(hH)s:c:f:d:", ['help=', 'server=', 'controller=', 'function=', 'dynamic='])
     if len(opts) == 0:
-        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name -d')
         sys.exit(1)
 
     if sys.argv[1] in ('-h', '-H', '--help'):
-        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name -d')
         sys.exit(1)
 
-    if sys.argv[1] in ('-s', '--server', '-c', '--controller', '-f', '--function'):
+    if sys.argv[1] in ('-s', '--server', '-c', '--controller', '-f', '--function', '-d', '--dynamic'):
         for opt, arg in opts:
             if opt in ('-s', '--server'):
                 server = arg
@@ -132,12 +134,17 @@ if __name__ == '__main__':
                 controller = arg
             if opt in ('-f', '--function'):
                 function = arg
+            if opt in ('-d', '--dynamic'):
+                dynamic = arg
 
     if server == '':
-        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name')
+        print('Usage python PressureStart.py -s server-name -c controller-name -f function-name -d')
         sys.exit(1)
 
-    api_request_data = ApiRequestData(server, controller, function)
+    if dynamic is not None:
+        server_host = ServerHost()
+        host = server_host.get_host(server)
+    api_request_data = ApiRequestData(server, controller, function, host)
     json_data_arr = api_request_data.get_json_data()
 
     thread_arr = []
