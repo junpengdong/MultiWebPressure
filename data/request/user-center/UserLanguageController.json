@@ -1,7 +1,7 @@
 {
     "getUserLanguageList": {
         "api": "/api/v1/user/language/list?userId=217728&ids=217728",
-	"request_type": "get",
+		"request_type": "get",
     	"params_method": "",
     	"body_params": "",
     	"headers": "",
