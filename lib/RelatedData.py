@@ -97,12 +97,12 @@ class ApiRequestData:
 
     def __data_handle_step1(self, data, host=None):
         step1_data = {}
+        file_data_arr = []
         for file in data:
             if host is None:
                 host_json_path = self.__base_json_file % (self.__server, self.__host_json)
                 host_json_obj = self.__read_data(host_json_path)
                 host = host_json_obj.get(self.__host_key)
-            file_data_arr = []
             file_name_path = self.__base_json_file % (self.__server, file)
             file_data_obj = self.__read_data(file_name_path)
             if self.__function == 'all':
@@ -124,7 +124,7 @@ class ApiRequestData:
                         file_data[self.__controller_key] = file.split('.')[0]
                         file_data[self.__function_key] = self.__function
                         file_data_arr.append(file_data)
-            step1_data[host] = file_data_arr
+        step1_data[host] = file_data_arr
         return step1_data
 
     def __data_handle_step2(self, step1_data):
