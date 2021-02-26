@@ -1,11 +1,11 @@
 {
     "getVipInfo": {
-        "api": "/api/v1/users/80/vip/details",
+        "api": "/api/v1/users/217728/vip/details",
         "request_type": "get",
         "params_method": "",
         "body_params": "",
         "headers": "",
-        "request_number": 1,
-        "complete_second": 0
+        "request_number": 1700,
+        "complete_second": 100
     }
 }

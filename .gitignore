@@ -3,3 +3,4 @@
 #/data/request/*/Server.json
 /image/
 /data/response/
+*.pyc

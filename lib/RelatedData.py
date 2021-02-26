@@ -8,7 +8,7 @@ __all__ = 'ApiRequestData',
 
 class ApiRequestData:
 
-    def __init__(self, s, c, f):
+    def __init__(self, s, c, f, h):
         self.__server = s
         self.__controller = c
         self.__function = f
@@ -27,7 +27,7 @@ class ApiRequestData:
         self.__base_dir = '../data/request/'
         self.__base_json_dir = '../data/request/%s/'
         self.__base_json_file = '../data/request/%s/%s'
-        self.__json_data_arr = self.__init_data()
+        self.__json_data_arr = self.__init_data(h)
 
     def get_api(self, json_data):
         api = json_data.get(self.__api_key)
@@ -88,20 +88,21 @@ class ApiRequestData:
     def get_json_data(self):
         return self.__json_data_arr
 
-    def __init_data(self):
+    def __init_data(self, host):
         file_name_arr = self.__file_names()
         data = self.__filter_controller(file_name_arr)
-        step1_data = self.__data_handle_step1(data)
+        step1_data = self.__data_handle_step1(data, host)
         step2_data = self.__data_handle_step2(step1_data)
         return step2_data
 
-    def __data_handle_step1(self, data):
+    def __data_handle_step1(self, data, host=None):
         step1_data = {}
+        file_data_arr = []
         for file in data:
-            host_json_path = self.__base_json_file % (self.__server, self.__host_json)
-            host_json_obj = self.__read_data(host_json_path)
-            host = host_json_obj.get(self.__host_key)
-            file_data_arr = []
+            if host is None:
+                host_json_path = self.__base_json_file % (self.__server, self.__host_json)
+                host_json_obj = self.__read_data(host_json_path)
+                host = host_json_obj.get(self.__host_key)
             file_name_path = self.__base_json_file % (self.__server, file)
             file_data_obj = self.__read_data(file_name_path)
             if self.__function == 'all':
@@ -123,7 +124,7 @@ class ApiRequestData:
                         file_data[self.__controller_key] = file.split('.')[0]
                         file_data[self.__function_key] = self.__function
                         file_data_arr.append(file_data)
-            step1_data[host] = file_data_arr
+        step1_data[host] = file_data_arr
         return step1_data
 
     def __data_handle_step2(self, step1_data):
@@ -165,3 +166,4 @@ class ApiRequestData:
             if not os.path.isfile(os.path.join(base_dir, file)):
                 dir_name_arr.append(file)
         return dir_name_arr
+
